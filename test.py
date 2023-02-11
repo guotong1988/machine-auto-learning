@@ -1,6 +1,22 @@
 from transformers import AutoTokenizer, TFAutoModel
 import transformers
 
+from transformers import (
+    CONFIG_MAPPING,
+    CONFIG_NAME,
+    TF2_WEIGHTS_NAME,
+    TF_MODEL_FOR_CAUSAL_LM_MAPPING,
+    AutoConfig,
+    AutoTokenizer,
+    HfArgumentParser,
+    PushToHubCallback,
+    TFAutoModelForCausalLM,
+    TFTrainingArguments,
+    create_optimizer,
+    set_seed,
+)
+
+import tensorflow as tf
 print(transformers.__version__)
 
 from datasets import load_dataset
@@ -9,12 +25,10 @@ input_data = load_dataset("data", data_files="all.txt")
 for i in range(1, 10):
     print(input_data["train"][i])
 
-tokenizer_checkpoint = "sgugger/gpt2-like-tokenizer"
 
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained(tokenizer_checkpoint)
-
+tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese', use_fast = False, tokenize_chinese_chars =False)
 
 def tokenize_function(examples):
     return tokenizer(examples["text"])
@@ -55,10 +69,61 @@ for i in range(1, 10):
     print(tokenizer.decode(lm_datasets["train"][i]["input_ids"]))
 
 print()
-# tokenizer = AutoTokenizer.from_pretrained("gpt2")
-# model = TFAutoModel.from_pretrained("gpt2")
-#
-# inputs = tokenizer("Hello world!", return_tensors="tf")
-# outputs = model(**inputs)
-# print(inputs)
-# print(outputs)
+
+from transformers import AutoConfig, TFAutoModelForCausalLM
+
+model_checkpoint = "gpt2"
+config = AutoConfig.from_pretrained(model_checkpoint)
+model = TFAutoModelForCausalLM.from_config(config)
+
+from transformers import TFTrainer, TFTrainingArguments
+training_args = TFTrainingArguments(
+    f"{model_checkpoint}-test",
+    evaluation_strategy = "epoch",
+    learning_rate=2e-5,
+    weight_decay=0.01,
+    push_to_hub=True
+)
+
+num_replicas = training_args.strategy.num_replicas_in_sync
+options = tf.data.Options()
+options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF
+
+tf_train_dataset = model.prepare_tf_dataset(
+            lm_datasets["train"],
+            shuffle=True,
+            batch_size=num_replicas * training_args.per_device_train_batch_size,
+        ).with_options(options)
+
+tf_eval_dataset = model.prepare_tf_dataset(
+            lm_datasets["train"],
+            shuffle=False,
+            batch_size=num_replicas * training_args.per_device_eval_batch_size,
+            drop_remainder=True,
+        ).with_options(options)
+
+num_train_steps = len(tf_train_dataset) * int(training_args.num_train_epochs)
+num_warmup_steps = 0
+
+optimizer, lr_schedule = create_optimizer(
+            init_lr=training_args.learning_rate,
+            num_train_steps=num_train_steps,
+            num_warmup_steps=num_warmup_steps,
+            adam_beta1=training_args.adam_beta1,
+            adam_beta2=training_args.adam_beta2,
+            adam_epsilon=training_args.adam_epsilon,
+            weight_decay_rate=training_args.weight_decay,
+            adam_global_clipnorm=training_args.max_grad_norm,
+        )
+
+# no user-specified loss = will use the model internal loss
+model.compile(optimizer=optimizer, jit_compile=training_args.xla)
+callbacks = []
+history = model.fit(
+            tf_train_dataset,
+            validation_data=tf_eval_dataset,
+            epochs=int(training_args.num_train_epochs),
+            callbacks=callbacks,
+        )
+train_loss = history.history["loss"][-1]
+print(train_loss)
