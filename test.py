@@ -1,20 +1,7 @@
 from transformers import AutoTokenizer, TFAutoModel
 import transformers
 
-from transformers import (
-    CONFIG_MAPPING,
-    CONFIG_NAME,
-    TF2_WEIGHTS_NAME,
-    TF_MODEL_FOR_CAUSAL_LM_MAPPING,
-    AutoConfig,
-    AutoTokenizer,
-    HfArgumentParser,
-    PushToHubCallback,
-    TFAutoModelForCausalLM,
-    TFTrainingArguments,
-    create_optimizer,
-    set_seed,
-)
+from transformers import create_optimizer
 
 import tensorflow as tf
 print(transformers.__version__)
