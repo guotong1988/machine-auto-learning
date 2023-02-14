@@ -15,7 +15,7 @@ for i in range(1, 10):
 
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese', use_fast = False, tokenize_chinese_chars =False)
+tokenizer = AutoTokenizer.from_pretrained('bert-base-chinese', use_fast = False, tokenize_chinese_chars = True)
 
 def tokenize_function(examples):
     return tokenizer(examples["text"])
@@ -70,7 +70,7 @@ training_args = TFTrainingArguments(
     learning_rate=2e-5,
     weight_decay=0.01,
     push_to_hub=True,
-    num_train_epochs = 1
+    num_train_epochs = 3
 )
 
 num_replicas = training_args.strategy.num_replicas_in_sync
