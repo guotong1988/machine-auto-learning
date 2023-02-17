@@ -75,6 +75,7 @@ model = TFAutoModelForCausalLM.from_config(config)
 from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
+    output_dir="./saved_model/",
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     weight_decay=0.01,
