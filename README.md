@@ -2,7 +2,7 @@
 
 # Requirements
 
-cuda==11.3
+cuda==11.4
 
 cudnn==8.2
 
