@@ -72,10 +72,9 @@ config.save_pretrained("./saved_config/")
 
 model = TFAutoModelForCausalLM.from_config(config)
 
-from transformers import TFTrainer, TFTrainingArguments
+from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
-    f"{model_checkpoint}-test",
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     weight_decay=0.01,
