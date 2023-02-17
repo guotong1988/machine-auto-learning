@@ -19,7 +19,7 @@ tokenizer = AutoTokenizer.from_pretrained(
     pretrained_model_name_or_path='bert-base-chinese',
     tokenize_chinese_chars=True)
 
-tokenizer.save_pretrained("./tokenizer/")
+tokenizer.save_pretrained("./saved_tokenizer/")
 
 
 def tokenize_function(examples):
@@ -68,7 +68,7 @@ model_checkpoint = "gpt2"
 
 config = AutoConfig.from_pretrained(model_checkpoint)
 
-config.save_pretrained("./saved_model/")
+config.save_pretrained("./saved_config/")
 
 model = TFAutoModelForCausalLM.from_config(config)
 
@@ -128,4 +128,4 @@ print(train_loss)
 
 validation_loss = history.history["val_loss"][-1]
 print(validation_loss)
-model.save_pretrained(training_args.output_dir)
+model.save_pretrained("./saved_model/")
