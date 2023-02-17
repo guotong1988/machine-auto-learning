@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, TFAutoModel
 import transformers
 
 from transformers import create_optimizer
-
+import os
 import tensorflow as tf
 
 print(transformers.__version__)
@@ -64,18 +64,21 @@ print()
 
 from transformers import AutoConfig, TFAutoModelForCausalLM
 
-model_checkpoint = "gpt2"
+model_checkpoint_local = "./saved_model/"
+model_checkpoint_download = "gpt2"
 
-config = AutoConfig.from_pretrained(model_checkpoint)
+if os.path.exists(model_checkpoint_local):
+    model = TFAutoModelForCausalLM.from_pretrained(model_checkpoint_local)
 
-config.save_pretrained("./saved_config/")
-
-model = TFAutoModelForCausalLM.from_config(config)
+else:
+    config = AutoConfig.from_pretrained(model_checkpoint_download)
+    config.save_pretrained("./saved_config/")
+    model = TFAutoModelForCausalLM.from_config(config)
 
 from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
-    output_dir="./saved_model/",
+    output_dir=model_checkpoint_local,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     weight_decay=0.01,
@@ -128,4 +131,4 @@ print(train_loss)
 
 validation_loss = history.history["val_loss"][-1]
 print(validation_loss)
-model.save_pretrained("./saved_model/")
+model.save_pretrained(model_checkpoint_local)
