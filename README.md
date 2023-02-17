@@ -6,7 +6,7 @@ cuda==11.3
 
 cudnn==8.2
 
-Python==3.8
+python==3.8
 
 tensorflow-gpu==2.5.0
 
