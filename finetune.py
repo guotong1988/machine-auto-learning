@@ -8,7 +8,7 @@ print(transformers.__version__)
 
 from datasets import load_dataset
 
-input_data = load_dataset("data", data_files="fine_tune.txt")
+input_data = load_dataset("data", data_files="finetune.txt")
 for i in range(0, 10):
     print(input_data["train"][i])
 
