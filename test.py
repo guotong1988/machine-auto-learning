@@ -3,11 +3,12 @@ from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("./saved_tokenizer/")
 
-prompt = "段誉"
-inputs = tokenizer(prompt, return_tensors="tf")
+prompts = ["乔峰", "段誉", "虚竹"]
+inputs = tokenizer(prompts, return_tensors="tf")
 print(inputs)
 
 model = TFAutoModelForCausalLM.from_pretrained("./saved_model_finetuned/")
 
 outputs = model.generate(**inputs)
-print(tokenizer.batch_decode(outputs, skip_special_tokens=True))
+for one in tokenizer.batch_decode(outputs, skip_special_tokens=True):
+    print(one)
