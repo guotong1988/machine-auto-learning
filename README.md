@@ -1,6 +1,6 @@
 # GPT-test
 
-1, Last step training is viewed as pre-train for next step. There is no that fine-tune.
+1, Training of last step is viewed as pre-train of next step. There is no that fine-tune.
 
 # Requirements
 
