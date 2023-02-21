@@ -14,15 +14,15 @@ for i in range(0, 10):
 
 from transformers import AutoTokenizer
 
-tokenizer_checkpoint_local = "./saved_tokenizer/"
-if not os.path.exists(tokenizer_checkpoint_local):
+checkpoint_local = "./saved_dir/"
+if not os.path.exists(checkpoint_local):
     tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path='bert-base-chinese',
         tokenize_chinese_chars=True)
-    tokenizer.save_pretrained(tokenizer_checkpoint_local)
+    tokenizer.save_pretrained(checkpoint_local)
 else:
     tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=tokenizer_checkpoint_local,
+        pretrained_model_name_or_path=checkpoint_local,
         tokenize_chinese_chars=True)
 
 
@@ -35,7 +35,7 @@ tokenized_datasets = input_data.map(tokenize_function, batched=True, num_proc=4,
 for i in range(0, 10):
     print(tokenized_datasets["train"][i])
 
-block_size = 12
+block_size = 128
 
 
 def group_texts(examples):
@@ -64,21 +64,19 @@ print()
 
 from transformers import AutoConfig, TFAutoModelForCausalLM
 
-model_checkpoint_local = "./saved_model_pretrained/"
-model_checkpoint_download = "gpt2"
 
-if os.path.exists(model_checkpoint_local):
-    model = TFAutoModelForCausalLM.from_pretrained(model_checkpoint_local)
+if os.path.exists(checkpoint_local):
+    model = TFAutoModelForCausalLM.from_pretrained(checkpoint_local)
 
 else:
-    config = AutoConfig.from_pretrained(model_checkpoint_download)
-    config.save_pretrained("./saved_config/")
+    config = AutoConfig.from_pretrained("gpt2")
+    config.save_pretrained(checkpoint_local)
     model = TFAutoModelForCausalLM.from_config(config)
 
 from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
-    output_dir=model_checkpoint_local,
+    output_dir=checkpoint_local,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     weight_decay=0.01,
