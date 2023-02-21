@@ -1,5 +1,7 @@
 # GPT-test
 
+1, Last step training is viewed as pre-train for next step. There is no that fine-tune.
+
 # Requirements
 
 cuda==11.3
