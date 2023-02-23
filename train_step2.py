@@ -15,13 +15,7 @@ for i in range(0, 10):
 from transformers import AutoTokenizer
 
 checkpoint_local = "./saved_dir/"
-if not os.path.exists(checkpoint_local):
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path='bert-base-chinese',
-        tokenize_chinese_chars=True)
-    tokenizer.save_pretrained(checkpoint_local)
-else:
-    tokenizer = AutoTokenizer.from_pretrained(
+tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path=checkpoint_local,
         tokenize_chinese_chars=True)
 
@@ -65,13 +59,7 @@ print()
 from transformers import AutoConfig, TFAutoModelForCausalLM
 
 
-if os.path.exists(checkpoint_local):
-    model = TFAutoModelForCausalLM.from_pretrained(checkpoint_local)
-
-else:
-    config = AutoConfig.from_pretrained("gpt2")
-    config.save_pretrained(checkpoint_local)
-    model = TFAutoModelForCausalLM.from_config(config)
+model = TFAutoModelForCausalLM.from_pretrained(checkpoint_local)
 
 from transformers import TFTrainingArguments
 
@@ -129,4 +117,4 @@ print(train_loss)
 
 validation_loss = history.history["val_loss"][-1]
 print(validation_loss)
-model.save_pretrained("./saved_model_finetuned/")
+model.save_pretrained(checkpoint_local)
