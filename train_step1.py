@@ -85,7 +85,7 @@ training_args = TFTrainingArguments(
     learning_rate=2e-5,
     weight_decay=0.01,
     push_to_hub=False,
-    num_train_epochs=1
+    num_train_epochs=1000
 )
 
 num_replicas = training_args.strategy.num_replicas_in_sync
