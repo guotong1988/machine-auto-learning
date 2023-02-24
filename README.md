@@ -1,6 +1,6 @@
 # GPT-test
 
-step-1, Unsupervised keywords extraction.
+step-1, Unsupervised keywords extraction in all paragraphs.
 
 step-2, Find keywords in paragraphs. Paragraphs are the Answers.
 
