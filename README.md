@@ -1,6 +1,10 @@
 # GPT-test
 
-1, Training of last step is viewed as pre-train of its next step. There is no that fine-tune.
+step-1, Unsupervised keywords extraction.
+
+step-2, Find keywords in paragraphs. Paragraphs are the Answers.
+
+step-3, Use patterns to construct Questions from keywords.
 
 # Requirements
 
