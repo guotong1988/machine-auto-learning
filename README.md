@@ -2,7 +2,7 @@
 
 step-1, Unsupervised keywords extraction in all paragraphs.
 
-step-2, Find keywords in paragraphs. Paragraphs are the Answers.
+step-2, Find keywords in each paragraph. Paragraphs are the Answers.
 
 step-3, Use patterns to construct Questions from keywords.
 
