@@ -80,6 +80,7 @@ else:
 from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
+    do_eval=False,
     output_dir=checkpoint_local,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
