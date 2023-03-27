@@ -27,7 +27,7 @@ else:
 
 
 def tokenize_function(examples):
-    return tokenizer(examples["text"])
+    return tokenizer(examples["text"], add_special_tokens=False)
 
 
 tokenized_datasets = input_data.map(tokenize_function, batched=True, num_proc=4, remove_columns=["text"])
@@ -80,7 +80,6 @@ else:
 from transformers import TFTrainingArguments
 
 training_args = TFTrainingArguments(
-    do_eval=False,
     output_dir=checkpoint_local,
     evaluation_strategy="epoch",
     learning_rate=2e-5,
@@ -125,7 +124,7 @@ model.compile(optimizer=optimizer)
 callbacks = []
 history = model.fit(
     tf_train_dataset,
-    validation_data=tf_eval_dataset,
+    validation_data=None,
     epochs=int(training_args.num_train_epochs),
     callbacks=callbacks,
 )
