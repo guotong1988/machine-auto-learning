@@ -31,7 +31,7 @@ for i in range(0, 10):
 
 block_size = 128
 
-
+# 一个data = 一行文本
 def group_texts(examples):
     result = {}
     for key in examples:
