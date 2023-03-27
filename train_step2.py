@@ -21,7 +21,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 
 
 def tokenize_function(examples):
-    return tokenizer(examples["text"])
+    return tokenizer(examples["text"], add_special_tokens=False)
 
 
 tokenized_datasets = input_data.map(tokenize_function, batched=True, num_proc=4, remove_columns=["text"])
