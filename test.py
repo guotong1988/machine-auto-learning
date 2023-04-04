@@ -11,6 +11,9 @@ print(inputs)
 
 model = TFAutoModelForCausalLM.from_pretrained(checkpoint_local)
 
-outputs = model.generate(**inputs, max_length=30, num_beams=5, do_sample=False)
+outputs = model.generate(**inputs, 
+                        # max_length=30, 
+                         num_beams=5, 
+                         do_sample=False)
 for one in tokenizer.batch_decode(outputs, skip_special_tokens=True):
     print(one)
